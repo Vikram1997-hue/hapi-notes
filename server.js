@@ -25,9 +25,57 @@ const init = async() => {
 
     server.route({
       method: 'GET',
-      path: '/',
+      path: '/{username}',
       handler: (request, h) => {
-        return '<h1>Hapi mein aapka swagat hai</h1>'
+        console.log(request);
+        return `<h1>Mitr ${request.params.username}, Hapi mein aapka swagat hai</h1>`;
+      },
+    });
+
+    /**
+     * REQUEST AND H -
+     * 
+     * request - created internally for each incoming request. contains keys like -
+     * 1. request.auth - contains authentication information
+     * 2. request.query - query params
+     * 3. request.path - the request URI's pathname component
+     * etc.
+     * 
+     * 
+     * h - h is a response toolkit. It is basically a collection of the following properties - 
+     * 1. h.authenticated(data) - used to handle valid credentials
+     * 2. h.redirect(uri) - redirects the client to the specified uri
+     * 3. h.response([value]) - wraps the provided value and returns a response object
+     * etc.
+     * 
+     */
+
+    server.route({
+      method: 'GET',
+      path: '/greeting/{username?}', //? means that the request param is optional
+      handler: (request, h) => {
+        console.log('Your query params are:', request.query); //note that the names, number, and type of 
+        // query params don't have to be defined anywhere in the route information, unlike Express or NestJS
+        return `Greetings, ${request.params.username || 'my friend'}.`;
+      },
+    });
+
+    //example of redirection
+    server.route({
+      method: 'GET',
+      path: '/i-will-redirect',
+      handler: (request, h) => {
+        return h.redirect('/redirectedUser');
+      },
+    });
+
+    //handling of 404 error for API's that don't exist
+    server.route({
+      method: 'GET',
+      path: '/{any*}', //this is a wildcard expression. NOTE: it doesn't have to 'any*'; it could also be xyz* or vukrim*.
+        //Using the word 'any' is just a convention
+      handler: (request, h) => {
+        return '<h1>Oh no! You must be lost</h1>';
       },
     });
 
