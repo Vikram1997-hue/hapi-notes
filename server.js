@@ -79,6 +79,44 @@ const init = async() => {
       },
     });
 
+    /*ALTERNATIVELY -
+
+    //adding some level of organization - define all your endpoints in an array, and send that array as a parameter
+    //to server.route()
+    server.route([{
+        method: 'GET',
+        path: '/{username}',
+        handler: (request, h) => {
+          console.log(request);
+          return `<h1>Mitr ${request.params.username}, Hapi mein aapka swagat hai</h1>`;
+        },
+      },
+      {
+        method: 'GET',
+        path: '/greeting/{username?}', //? means that the request param is optional
+        handler: (request, h) => {
+          console.log('Your query params are:', request.query); //note that the names, number, and type of 
+          // query params don't have to be defined anywhere in the route information, unlike Express or NestJS
+          return `Greetings, ${request.params.username || 'my friend'}.`;
+        },
+      },
+      {
+        method: 'GET',
+        path: '/i-will-redirect',
+        handler: (request, h) => {
+          return h.redirect('/redirectedUser');
+        },
+      },
+      {
+        method: 'GET',
+        path: '/{any*}', //this is a wildcard expression. NOTE: it doesn't have to 'any*'; it could also be xyz* or vukrim*.
+          //Using the word 'any' is just a convention
+        handler: (request, h) => {
+          return '<h1>Oh no! You must be lost</h1>';
+        },
+    }]);
+    */
+
     await server.start();
     console.info(`Server running on ${server.info.uri}`);
 }
